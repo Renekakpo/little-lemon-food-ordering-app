@@ -28,6 +28,8 @@
 		FAC91E8C2B4C14F9009E8FD7 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC91E8B2B4C14F9009E8FD7 /* MenuItem.swift */; };
 		FAC91E8F2B4C1895009E8FD7 /* ExampleDatabase.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = FAC91E8D2B4C1894009E8FD7 /* ExampleDatabase.xcdatamodeld */; };
 		FAC91E912B4C24B3009E8FD7 /* DishDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAC91E902B4C24B3009E8FD7 /* DishDetail.swift */; };
+		FACB95F52B4DB30F00BDC9AB /* OnboardingPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACB95F42B4DB30F00BDC9AB /* OnboardingPage.swift */; };
+		FACB95F82B4DB35600BDC9AB /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FACB95F72B4DB35600BDC9AB /* UserData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +74,8 @@
 		FAC91E8B2B4C14F9009E8FD7 /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		FAC91E8E2B4C1894009E8FD7 /* ExampleDatabase.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ExampleDatabase.xcdatamodel; sourceTree = "<group>"; };
 		FAC91E902B4C24B3009E8FD7 /* DishDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DishDetail.swift; sourceTree = "<group>"; };
+		FACB95F42B4DB30F00BDC9AB /* OnboardingPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingPage.swift; sourceTree = "<group>"; };
+		FACB95F72B4DB35600BDC9AB /* UserData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -122,13 +126,14 @@
 		FA258BBC2B45C1EA00418F39 /* littlelemon */ = {
 			isa = PBXGroup;
 			children = (
+				FACB95F62B4DB34700BDC9AB /* Models */,
+				FACB95F22B4DB08A00BDC9AB /* Screens */,
 				FAC91E862B4C149F009E8FD7 /* FetchedObjects.swift */,
 				FAC91E852B4C149F009E8FD7 /* Persistence.swift */,
 				FA258BBD2B45C1EA00418F39 /* littlelemonApp.swift */,
 				FA258BBF2B45C1EA00418F39 /* ContentView.swift */,
 				FA258BC12B45C1EB00418F39 /* Assets.xcassets */,
 				FA258BC32B45C1EB00418F39 /* Preview Content */,
-				FAC91E7D2B4BFF62009E8FD7 /* Onboarding.swift */,
 				FAC91E7F2B4C0275009E8FD7 /* Home.swift */,
 				FAC91E812B4C0645009E8FD7 /* Menu.swift */,
 				FAC91E832B4C0B16009E8FD7 /* UserProfile.swift */,
@@ -167,6 +172,31 @@
 				FA258BDA2B45C1EB00418F39 /* littlelemonUITestsLaunchTests.swift */,
 			);
 			path = littlelemonUITests;
+			sourceTree = "<group>";
+		};
+		FACB95F22B4DB08A00BDC9AB /* Screens */ = {
+			isa = PBXGroup;
+			children = (
+				FACB95F32B4DB09300BDC9AB /* Onboarding */,
+			);
+			path = Screens;
+			sourceTree = "<group>";
+		};
+		FACB95F32B4DB09300BDC9AB /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				FAC91E7D2B4BFF62009E8FD7 /* Onboarding.swift */,
+				FACB95F42B4DB30F00BDC9AB /* OnboardingPage.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		FACB95F62B4DB34700BDC9AB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				FACB95F72B4DB35600BDC9AB /* UserData.swift */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -311,7 +341,9 @@
 				FA6E2D142B4D4BE4006938FC /* Color.swift in Sources */,
 				FA258BBE2B45C1EA00418F39 /* littlelemonApp.swift in Sources */,
 				FAC91E8A2B4C14D5009E8FD7 /* MenuList.swift in Sources */,
+				FACB95F82B4DB35600BDC9AB /* UserData.swift in Sources */,
 				FAC91E822B4C0645009E8FD7 /* Menu.swift in Sources */,
+				FACB95F52B4DB30F00BDC9AB /* OnboardingPage.swift in Sources */,
 				FAC91E912B4C24B3009E8FD7 /* DishDetail.swift in Sources */,
 				FA6E2D102B4D4780006938FC /* HeroBanner.swift in Sources */,
 				FAC91E8C2B4C14F9009E8FD7 /* MenuItem.swift in Sources */,
