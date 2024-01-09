@@ -11,4 +11,5 @@ struct UserData: Codable {
     var firstName: String = ""
     var lastName: String = ""
     var email: String = ""
+    var isLoggedIn: Bool = false
 }
