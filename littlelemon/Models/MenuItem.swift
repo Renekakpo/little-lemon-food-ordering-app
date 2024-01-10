@@ -11,6 +11,6 @@ struct MenuItem: Decodable {
     let title: String
     let image: String
     let price: String
-    
-    // Add other optional properties if needed (e.g., description)
+    let category: String
+    let description: String
 }

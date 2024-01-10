@@ -14,9 +14,14 @@ struct OnboardingPage: View {
     @Binding var text: String
     var onNext: (() -> Void)?
     
+    // State variable for the search text
+    @State private var searchText = ""
+    
     var body: some View {
         VStack(spacing: 16) {
-            HeroBanner()
+            Header()
+            
+            HeroBanner(searchText: $searchText)
             
             VStack(alignment: .leading, spacing: 8) {
                 Text(title)
@@ -26,17 +31,20 @@ struct OnboardingPage: View {
                 TextField(placeholder, text: $text)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
             }
+            .padding(.top, 25)
             
             Button(action: {
                 onNext?()
             }) {
                 Text(buttonText)
-                    .frame(width: 200, height: 20)
+                    .frame(width: 100, height: 15)
                     .padding()
                     .background(Color.littlePrimary)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+            
+            Spacer()
         }
         .padding()
     }

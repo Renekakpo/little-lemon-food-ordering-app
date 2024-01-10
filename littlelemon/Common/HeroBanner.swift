@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct HeroBanner: View {
-    @State private var searchText = ""
+    @Binding var searchText: String
     var showSearchField: Bool
     
-    init(showSearchField: Bool = false) {
+    init(showSearchField: Bool = false, searchText: Binding<String>) {
         self.showSearchField = showSearchField
+        _searchText = searchText
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Little Lemon")
                 .font(.title)
                 .foregroundColor(Color.littlePrimaryAlt)
-            
             
             Text("Benin")
                 .font(.title2)
@@ -28,17 +28,19 @@ struct HeroBanner: View {
             
             HStack {
                 VStack(alignment: .leading) {
-                    Text("Welcome to our restaurant! We are a family-owned African restaurant, focused on traditional recipes served with a modern twist.")
+                    Text("Welcome! We are a family-owned African restaurant, focused on traditional recipes served with a modern twist.")
                         .font(.subheadline)
-                        .frame(height: 120)
+                        .frame(height: 80)
                         .foregroundColor(Color.littleWhite)
                         .multilineTextAlignment(.leading)
                         .lineLimit(nil)
                 }
                 
+                Spacer()
+                
                 Image("home-dish")
                     .resizable()
-                    .frame(width: 100, height: 100)
+                    .frame(width: 60, height: 60)
                     .clipShape(Rectangle())
                     .cornerRadius(10)
                     .padding()
@@ -46,7 +48,6 @@ struct HeroBanner: View {
             
             if showSearchField {
                 SearchBar(text: $searchText)
-                    .padding(.top, 16)
             }
         }
         .padding()
@@ -55,11 +56,11 @@ struct HeroBanner: View {
     }
 }
 
-#Preview {
-    Group {
-        HeroBanner()
-        HeroBanner(showSearchField: true)
-    }
-    .previewLayout(.sizeThatFits)
-    .padding()
-}
+//#Preview {
+//    Group {
+//        HeroBanner()
+//        HeroBanner(showSearchField: true)
+//    }
+//    .previewLayout(.sizeThatFits)
+//    .padding()
+//}

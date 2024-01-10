@@ -8,26 +8,20 @@
 import SwiftUI
 
 struct UserProfile: View {
-    @State private var isOrderStatusesChecked: Bool = false
-    @State private var isPasswordChangesChecked: Bool = false
-    @State private var isSpecialOffersChecked: Bool = false
-    @State private var isNewsletterChecked: Bool = false
+    
+    @State private var userData = UserData()
+    
+    @State private var userDataOrigin = UserData()
+    
     @State private var isPhoneNumberValid: Bool = true
-    
-    @State private var firstName: String = ""
-    @State private var lastName: String = ""
-    @State private var email: String = ""
-    @State private var phoneNumber: String = ""
-    
-    // Add three text elements to hold user information from UserDefaults
-    let udFirstName: String = UserDefaults.standard.string(forKey: "first_name_key") ?? ""
-    let udLastName: String = UserDefaults.standard.string(forKey: "last_name_key") ?? ""
-    let udEmail: String = UserDefaults.standard.string(forKey: "email_key") ?? ""
     
     @State private var profileImage: Image? = nil
     
-    // Add a button to logout
-    @Environment(\.presentationMode) var presentation
+    @State private var imagePickerPresented = false
+    
+    @Environment(\.presentationMode) var presentationMode
+    
+    private var userDataKey: String = "user_data_key"
     
     var body: some View {
         ScrollView {
@@ -44,7 +38,7 @@ struct UserProfile: View {
                         .frame(width: 70, height: 70)
                         .clipShape(Circle())
                 } else {
-                    let profilePlaceholder = "\(String(firstName.prefix(1)))\(String(lastName.prefix(1)))"
+                    let profilePlaceholder = "\(String(userData.firstName.prefix(1)))\(String(userData.lastName.prefix(1)))"
                     // Placeholder with user initials
                     Circle()
                         .frame(width: 80, height: 80)
@@ -64,6 +58,9 @@ struct UserProfile: View {
                         .padding()
                         .background(Color.littlePrimary)
                         .cornerRadius(8)
+                        .sheet(isPresented: $imagePickerPresented) {
+                            ImagePicker(image: self.$profileImage, presentationMode: presentationMode)
+                        }
                 }
                 
                 Button(action: handleRemoveButtonPress) {
@@ -80,26 +77,26 @@ struct UserProfile: View {
             
             // Fields section
             VStack(alignment: .leading, spacing: 16) {
-                TextField("First name", text: $firstName)
+                TextField("First name", text: $userData.firstName)
                     .padding(.horizontal)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 
-                TextField("First name", text: $firstName)
+                TextField("First name", text: $userData.lastName)
                     .padding(.horizontal)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 
-                TextField("Email", text: $email)
+                TextField("Email", text: $userData.email)
                     .padding(.horizontal)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                 
                 
-                TextField("Phone number", text: $phoneNumber)
+                TextField("Phone number", text: $userData.phoneNumber)
                     .padding(.horizontal)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .keyboardType(.phonePad)
-                    .onChange(of: phoneNumber) { newValue in
+                    .onChange(of: userData.phoneNumber) { newValue in
                         // Validate phone number and update isPhoneNumberValid
                         isPhoneNumberValid = isValidPhoneNumber(newValue)
                     }
@@ -117,10 +114,10 @@ struct UserProfile: View {
                 Text("Email notifications")
                     .font(.headline)
                 
-                Toggle("Order statuses", isOn: $isOrderStatusesChecked)
-                Toggle("Password changes", isOn: $isPasswordChangesChecked)
-                Toggle("Special offers", isOn: $isSpecialOffersChecked)
-                Toggle("Newsletter", isOn: $isNewsletterChecked)
+                Toggle("Order statuses", isOn: $userData.emailNotifications.isOrderStatusesChecked)
+                Toggle("Password changes", isOn: $userData.emailNotifications.isPasswordChangesChecked)
+                Toggle("Special offers", isOn: $userData.emailNotifications.isSpecialOffersChecked)
+                Toggle("Newsletter", isOn: $userData.emailNotifications.isNewsletterChecked)
             }
             .padding(.top, 25)
             .padding(.horizontal, 15)
@@ -172,6 +169,18 @@ struct UserProfile: View {
             }
             .padding(.top, 10)
             .padding(.horizontal, 15)
+            .onAppear {
+                loadUserData()
+                
+                // Load user's profile image
+                if let imageData = userData.profileImageData,
+                   let uiImage = UIImage(data: imageData) {
+                    profileImage = Image(uiImage: uiImage)
+                }
+                
+                // Make a copy of userData for discarding changes
+                userDataOrigin = userData
+            }
             
             // Spacer
             Spacer()
@@ -181,61 +190,49 @@ struct UserProfile: View {
         .navigationBarHidden(true)
     }
     
+    // Function to load user data from UserDefaults
+    private func loadUserData() {
+        if let userDataData = UserDefaults.standard.data(forKey: userDataKey),
+           let savedUserData = try? JSONDecoder().decode(UserData.self, from: userDataData) {
+            // Update the local userData
+            self.userData = savedUserData
+        }
+    }
+    
     private func handleLogoutButtonPress() {
-        UserDefaults.standard.set(false, forKey: "is_logged_in_key")
-        self.presentation.wrappedValue.dismiss()
+        // Clear userData in UserDefaults
+        UserDefaults.standard.removeObject(forKey: userDataKey)
+        // Navigate back to the Onboarding view
+        presentationMode.wrappedValue.dismiss()
     }
     
     private func handleDiscardChangesBtnPress() {
-        firstName = UserDefaults.standard.string(forKey: "first_name_key") ?? ""
-        lastName = UserDefaults.standard.string(forKey: "last_name_key") ?? ""
-        email = UserDefaults.standard.string(forKey: "email_key") ?? ""
-        phoneNumber = ""
-        
-        isOrderStatusesChecked = false
-        isPasswordChangesChecked = false
-        isSpecialOffersChecked = false
-        isNewsletterChecked = false
-        
-        profileImage = nil
+        // Reset current userData to originalUserData
+        userData = userDataOrigin
     }
     
     private func handleSaveChangesButtonPress() {
-        let updatedUserData: [String: Any] = [
-            "firstName": firstName,
-            "lastName": lastName,
-            "email": email,
-            "phoneNumber": phoneNumber,
-            "emailNotifications": [
-                "orderStatuses": isOrderStatusesChecked,
-                "passwordChanges": isPasswordChangesChecked,
-                "specialOffers": isSpecialOffersChecked,
-                "newsletter": isNewsletterChecked
-            ],
-            "profileImage": profileImage ?? ""
-        ]
+        // Convert Image to Data and save it in userData
+        if profileImage != nil {
+            if let uiImage = uiImageFromImage(profileImage!),
+               let imageData = uiImage.jpegData(compressionQuality: 0.8) {
+                userData.profileImageData = imageData
+            }
+        }
         
-        // Save updatedUserData to UserDefaults
-        UserDefaults.standard.set(updatedUserData, forKey: "userData")
+        // Save current userData to UserDefaults
+        if let userDataData = try? JSONEncoder().encode(userData) {
+            UserDefaults.standard.set(userDataData, forKey: userDataKey)
+            userDataOrigin = userData
+        }
     }
     
     private func handleChangeButtonPress() {
-//        let picker = UIImagePickerController()
-//        picker.allowsEditing = true
-//        picker.sourceType = .photoLibrary
-//        picker.delegate = context.coordinator
-//        parent.present(picker, animated: true, completion: nil)
+        imagePickerPresented = true
     }
     
     private func handleRemoveButtonPress() {
         profileImage = nil
-    }
-    
-    private func isValidPhoneNumber(_ value: String) -> Bool {
-        let phonePattern = #"^\(\d{3}\) \d{2}-\d{2}-\d{2}-\d{2}$"#
-        let regex = try? NSRegularExpression(pattern: phonePattern)
-        let range = NSRange(location: 0, length: value.utf16.count)
-        return regex?.firstMatch(in: value, options: [], range: range) != nil
     }
 }
 
